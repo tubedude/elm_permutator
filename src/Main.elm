@@ -15,7 +15,7 @@ type alias Model =
     String
 
 init : Model
-init = ""
+init = "elm"
 
 
 -- UPDATE
@@ -34,14 +34,16 @@ view : Model -> Html Msg
 view model =
     let
         perms = stringPermutation model
+        dist_perms = distinct [] perms
     in
     
     div []
         [ h1 [] [text "Permutation in Elm"] 
         , p [] [text "Write a text below: (limited to 7 chars)"]
         , input [type_ "text", placeholder "Palavra", value model, onInput OnUpdate, maxlength 7] []
-        , p [] [text (String.concat ["Count distinct: ", (String.fromInt (List.length perms))])] 
-        , p [] [text (String.join ", " perms)]
+        , p [] [text (String.concat ["Count total: ", (String.fromInt (List.length perms))])] 
+        , p [] [text (String.concat ["Count distinct: ", (String.fromInt (List.length dist_perms))])] 
+        , p [] [text (String.join ", " dist_perms)]
         ]
 
 
@@ -86,4 +88,4 @@ distinct acc list =
 
 stringPermutation : String -> List String
 stringPermutation string =
-    distinct [] (List.map (String.fromList) (permute 0 [] (String.toList string)))
+    (List.map (String.fromList) (permute 0 [] (String.toList string)))

@@ -4402,7 +4402,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$init = '';
+var author$project$Main$init = 'elm';
 var author$project$Main$update = F2(
 	function (msg, model) {
 		var string = msg;
@@ -4969,16 +4969,13 @@ var elm$core$String$toList = function (string) {
 };
 var author$project$Main$stringPermutation = function (string) {
 	return A2(
-		author$project$Main$distinct,
-		_List_Nil,
-		A2(
-			elm$core$List$map,
-			elm$core$String$fromList,
-			A3(
-				author$project$Main$permute,
-				0,
-				_List_Nil,
-				elm$core$String$toList(string))));
+		elm$core$List$map,
+		elm$core$String$fromList,
+		A3(
+			author$project$Main$permute,
+			0,
+			_List_Nil,
+			elm$core$String$toList(string)));
 };
 var elm$core$Basics$identity = function (x) {
 	return x;
@@ -5286,6 +5283,7 @@ var elm$html$Html$Events$onInput = function (tagger) {
 };
 var author$project$Main$view = function (model) {
 	var perms = author$project$Main$stringPermutation(model);
+	var dist_perms = A2(author$project$Main$distinct, _List_Nil, perms);
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
@@ -5325,7 +5323,7 @@ var author$project$Main$view = function (model) {
 						elm$core$String$concat(
 							_List_fromArray(
 								[
-									'Count distinct: ',
+									'Count total: ',
 									elm$core$String$fromInt(
 									elm$core$List$length(perms))
 								])))
@@ -5336,7 +5334,21 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						elm$html$Html$text(
-						A2(elm$core$String$join, ', ', perms))
+						elm$core$String$concat(
+							_List_fromArray(
+								[
+									'Count distinct: ',
+									elm$core$String$fromInt(
+									elm$core$List$length(dist_perms))
+								])))
+					])),
+				A2(
+				elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						A2(elm$core$String$join, ', ', dist_perms))
 					]))
 			]));
 };
