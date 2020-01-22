@@ -4971,15 +4971,14 @@ var author$project$Main$stringPermutation = function (string) {
 	return A2(
 		author$project$Main$distinct,
 		_List_Nil,
-		elm$core$List$reverse(
-			A2(
-				elm$core$List$map,
-				elm$core$String$fromList,
-				A3(
-					author$project$Main$permute,
-					0,
-					_List_Nil,
-					elm$core$String$toList(string)))));
+		A2(
+			elm$core$List$map,
+			elm$core$String$fromList,
+			A3(
+				author$project$Main$permute,
+				0,
+				_List_Nil,
+				elm$core$String$toList(string))));
 };
 var elm$core$Basics$identity = function (x) {
 	return x;
@@ -4991,6 +4990,10 @@ var elm$core$String$join = F2(
 			sep,
 			_List_toArray(chunks));
 	});
+var elm$core$String$concat = function (strings) {
+	return A2(elm$core$String$join, '', strings);
+};
+var elm$core$String$fromInt = _String_fromNumber;
 var elm$core$Result$isOk = function (result) {
 	if (!result.$) {
 		return true;
@@ -5093,7 +5096,6 @@ var elm$core$List$indexedMap = F2(
 			xs);
 	});
 var elm$core$String$all = _String_all;
-var elm$core$String$fromInt = _String_fromNumber;
 var elm$core$String$uncons = _String_uncons;
 var elm$core$String$split = F2(
 	function (sep, string) {
@@ -5226,10 +5228,17 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	}
 };
 var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$h1 = _VirtualDom_node('h1');
 var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$p = _VirtualDom_node('p');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$html$Html$Attributes$maxlength = function (n) {
+	return A2(
+		_VirtualDom_attribute,
+		'maxlength',
+		elm$core$String$fromInt(n));
+};
 var elm$json$Json$Encode$string = _Json_wrap;
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
@@ -5276,11 +5285,26 @@ var elm$html$Html$Events$onInput = function (tagger) {
 			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
 };
 var author$project$Main$view = function (model) {
+	var perms = author$project$Main$stringPermutation(model);
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
+				A2(
+				elm$html$Html$h1,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('Permutation in Elm')
+					])),
+				A2(
+				elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text('Write a text below: (limited to 7 chars)')
+					])),
 				A2(
 				elm$html$Html$input,
 				_List_fromArray(
@@ -5288,7 +5312,8 @@ var author$project$Main$view = function (model) {
 						elm$html$Html$Attributes$type_('text'),
 						elm$html$Html$Attributes$placeholder('Palavra'),
 						elm$html$Html$Attributes$value(model),
-						elm$html$Html$Events$onInput(elm$core$Basics$identity)
+						elm$html$Html$Events$onInput(elm$core$Basics$identity),
+						elm$html$Html$Attributes$maxlength(7)
 					]),
 				_List_Nil),
 				A2(
@@ -5297,10 +5322,21 @@ var author$project$Main$view = function (model) {
 				_List_fromArray(
 					[
 						elm$html$Html$text(
-						A2(
-							elm$core$String$join,
-							', ',
-							author$project$Main$stringPermutation(model)))
+						elm$core$String$concat(
+							_List_fromArray(
+								[
+									'Count distinct: ',
+									elm$core$String$fromInt(
+									elm$core$List$length(perms))
+								])))
+					])),
+				A2(
+				elm$html$Html$p,
+				_List_Nil,
+				_List_fromArray(
+					[
+						elm$html$Html$text(
+						A2(elm$core$String$join, ', ', perms))
 					]))
 			]));
 };
