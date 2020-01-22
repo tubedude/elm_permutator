@@ -1,5 +1,5 @@
 import Array exposing (set, get, toList, fromList)
-import Html exposing (text, input, div, p, h1, h2, h3, Html)
+import Html exposing (text, input, div, p, h1, h2, span, Html)
 import Browser
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
@@ -32,9 +32,16 @@ update msg model  =
 
 view : Model -> Html Msg
 view model =
+    let
+        perms = stringPermutation model
+    in
+    
     div []
-        [ input [type_ "text", placeholder "Palavra", value model, onInput OnUpdate] []
-        , p [] [text (String.join ", " (stringPermutation model))]
+        [ h1 [] [text "Permutation in Elm"] 
+        , p [] [text "Write a text below: (limited to 7 chars)"]
+        , input [type_ "text", placeholder "Palavra", value model, onInput OnUpdate, maxlength 7] []
+        , p [] [text (String.concat ["Count distinct: ", (String.fromInt (List.length perms))])] 
+        , p [] [text (String.join ", " perms)]
         ]
 
 
@@ -79,5 +86,4 @@ distinct acc list =
 
 stringPermutation : String -> List String
 stringPermutation string =
-    distinct [] (List.reverse (List.map (String.fromList) (permute 0 [] (String.toList string))))
---    (List.reverse (List.map (String.fromList) (permute 0 [] (String.toList string))))
+    distinct [] (List.map (String.fromList) (permute 0 [] (String.toList string)))
